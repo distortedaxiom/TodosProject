@@ -58,7 +58,7 @@ public class UserController {
 	@PostMapping("/users")
 	public ResponseEntity<Optional<User>> addUser(@Valid @RequestBody User user) throws EntityAlreadyExistException {
 		
-		if (userRepo.findByUsername(user.getUsername()) != null) {
+		if (userRepo.findByUsername(user.getUsername()) == null) {
 			throw new EntityAlreadyExistException(user.getUsername());
 		}
 		
