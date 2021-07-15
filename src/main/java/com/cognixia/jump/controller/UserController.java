@@ -55,7 +55,7 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws Exception {
+	public ResponseEntity<Optional<User>> addUser(@Valid @RequestBody User user) throws Exception {
 		
 		user.setId(-1);
 		
@@ -64,7 +64,7 @@ public class UserController {
 		User newUser = userRepo.save(user);
 		
 		return ResponseEntity.status(201)
-							 .body(user);
+							 .body(userRepo.findByUsername(user.getUsername()));
 	}
 	
 	@PutMapping("/users/{user_id}/todos/{todo_id}")

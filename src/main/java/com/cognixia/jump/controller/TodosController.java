@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.InvalidInputException;
+import com.cognixia.jump.exception.TodosNotFoundException;
 import com.cognixia.jump.model.Todos;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.TodosRepository;
@@ -36,7 +38,7 @@ public class TodosController {
 	}	
 	
 	@GetMapping("/todos/{todo_id}")
-	public ResponseEntity<Todos> getTodosById(@Valid @PathVariable("todo_id") int todo_id) {
+	public ResponseEntity<Todos> getTodosById(@Valid @PathVariable("todo_id") int todo_id) throws TodosNotFoundException {
 		
 		Optional<Todos> todoOpt = repo.findById(todo_id);
 	
@@ -47,14 +49,12 @@ public class TodosController {
 		}
 		
 		else {
-			return ResponseEntity.status(400)
-					 .body(todoOpt.get());
+			throw new TodosNotFoundException(todo_id);
 		}
-	}	
-	
+	}
 	
 	@DeleteMapping("/todos/{todo_id}")
-	public ResponseEntity<Optional<Todos>> deleteTodoById(@Valid @PathVariable("todo_id") int todo_id) {
+	public ResponseEntity<Optional<Todos>> deleteTodoById(@Valid @PathVariable("todo_id") int todo_id) throws TodosNotFoundException {
 		
 	    Optional<Todos> todo = repo.findById(todo_id);
 	    
@@ -65,8 +65,9 @@ public class TodosController {
 					 .body(todo);
 	    }
 
-    	return ResponseEntity.status(400)
-				 .body(todo);
+		else {
+			throw new TodosNotFoundException(todo_id);
+		}
 
 	}
 
