@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.EntityAlreadyExistException;
 import com.cognixia.jump.exception.InvalidInputException;
 import com.cognixia.jump.model.Todos;
 import com.cognixia.jump.model.User;
@@ -55,7 +56,11 @@ public class UserController {
 	}	
 	
 	@PostMapping("/users")
-	public ResponseEntity<Optional<User>> addUser(@Valid @RequestBody User user) throws Exception {
+	public ResponseEntity<Optional<User>> addUser(@Valid @RequestBody User user) throws EntityAlreadyExistException {
+		
+		if (userRepo.findByUsername(user.getUsername()) != null) {
+			throw new EntityAlreadyExistException(user.getUsername());
+		}
 		
 		user.setId(-1);
 		
