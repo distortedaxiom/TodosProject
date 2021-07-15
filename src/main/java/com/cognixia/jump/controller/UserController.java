@@ -40,7 +40,7 @@ public class UserController {
 		 .body(userRepo.findAll());
 	}	
 	
-	@GetMapping("/users/{user_id}")
+	@GetMapping("/users/{user_id}/todos")
 	public ResponseEntity<User> getUsersById(@Valid @PathVariable("user_id") int user_id) throws InvalidInputException {
 		
 		Optional<User> userOpt = userRepo.findById(user_id);
