@@ -68,7 +68,6 @@ public class TodosController {
     	return ResponseEntity.status(400)
 				 .body(todo);
 
-		
 	}
 
 }

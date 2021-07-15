@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,19 +16,20 @@ public class MyUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	
-	// attributes from User that are needed to do our authorization/authentication
 	private String username;
 	private String password;
+	private List<GrantedAuthority> authorities;
 
 	public MyUserDetails(User user) {
-
-		super();
+		
 		this.username = user.getUsername();
 		this.password = user.getPassword();
+		this.authorities = Arrays.asList( new SimpleGrantedAuthority("USER"));
 		
 	}
 	
-	public MyUserDetails() { }
+	public MyUserDetails() { 
+	}
 
 	@Override
 	public String getPassword() {
@@ -57,7 +59,7 @@ public class MyUserDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return new HashSet<GrantedAuthority>();
+		return authorities;
 	}
 
 	@Override

@@ -12,50 +12,34 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.cognixia.jump.service.MyUserDetailsService;
+
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	UserDetailsService userDetailsService; 
+	 MyUserDetailsService MyUserDetailsService; 
 	
-	// configuration for the authentication (who are you?)
 	@Override
 	protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
-		
-//		auth.inMemoryAuthentication()
-//			.withUser("user1")
-//			.password( passwordEncoder().encode("123") )
-//			.roles("USER")
-//			.and()
-//			.withUser("admin1")
-//			.password( passwordEncoder().encode("123") )
-//			.roles("ADMIN")
-//			.and()
-//			.withUser("dev1")
-//			.password( passwordEncoder().encode("123") )
-//			.roles("DEV");
-		
-		System.out.println("running details service");
-		
-		auth.userDetailsService(userDetailsService);
+
+		auth.userDetailsService(MyUserDetailsService).passwordEncoder(passwordEncoder());
 		
 	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		
 		return NoOpPasswordEncoder.getInstance();
+//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-	// which users have access to which uri paths
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		
-		http.csrf().disable()
-			.authorizeRequests()
-			.antMatchers("/**").authenticated() // all paths
-			.and().httpBasic();
-		
+        http.csrf().disable()
+        .authorizeRequests()
+        .anyRequest().authenticated().and().httpBasic();
+        
 	}
 	
 }
